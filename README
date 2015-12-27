@@ -1,4 +1,6 @@
-"""
+ZeroDB benchmarks
+========================
+
 Benchmarks to do:
   Types:
     * Fulltext search:
@@ -8,10 +10,10 @@ Benchmarks to do:
       - <, >, InRange; for ints, floats
 
 With db sizes:
-  S_db = 100M, 1G, 10G etc.
+    100M, 1G, 10G etc.
 
 With cache sizes:
-  S_c = 1M, 10M, 100M, 1G
+    1M, 10M, 100M, 1G
 
 Over time (with cache filled):
   out: time, #queries, cache filled, performance
@@ -25,4 +27,3 @@ Extra performance tests for:
   * selected read queries in parallel
 
 cProfile to find bottlenecks in each case (to point what to rewrite in C, for example).
-"""

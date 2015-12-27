@@ -8,7 +8,7 @@ then
     ln -s .venv/bin/activate .
 
     cd zerodb-benchmarks
-    zerodb-manage init-db --username test --pasphrase testpassword
+    zerodb-manage init_db --username test --passphrase testpassword --absolute-path
 else
     echo "All done already"
     echo "  source activate -- activate virtual environment"
