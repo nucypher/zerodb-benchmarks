@@ -1,0 +1,12 @@
+*.pyc
+*.pyo
+*.swp
+.ropeproject
+.coverage
+/.venv
+/zerodb-benchmarks/conf
+/zerodb-benchmarks/db
+/activate
+/dist
+/build
+/zerodb_benchmarks.egg-info
