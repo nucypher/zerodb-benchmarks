@@ -17,14 +17,18 @@ def server(conf_path=DEFAULT_CONF_PATH,
         sock=("localhost", 8001),
         username="test",
         passphrase="testpassword",
+        start_server=True,
         debug=False):
-    server = Process(target=ZEOServer.run, kwargs={"args": ("-C", conf_path)})
-    server.start()
-    sleep(0.2)  # Waiting until server starts (no big deal if it didn't yet though)
+
+    if start_server:
+        server = Process(target=ZEOServer.run, kwargs={"args": ("-C", conf_path)})
+        server.start()
+        sleep(0.2)  # Waiting until server starts (no big deal if it didn't yet though)
     zdb = zerodb.DB(sock, username=username, password=passphrase, debug=debug)
 
     yield zdb
 
     zdb.disconnect()
-    server.terminate()
-    server.join()
+    if start_server:
+        server.terminate()
+        server.join()
