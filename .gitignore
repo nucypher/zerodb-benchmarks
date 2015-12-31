@@ -6,6 +6,7 @@
 /.venv
 /zerodb-benchmarks/conf
 /zerodb-benchmarks/db
+/zerodb-benchmarks/out/*.csv
 /activate
 /dist
 /build
