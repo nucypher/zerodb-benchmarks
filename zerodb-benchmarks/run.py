@@ -19,6 +19,8 @@ DATE_FMT = "%Y-%m-%d-%H-%M"
 
 def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out", **kw):
     fname = path.join("out", "{0}.{1}.{2}.csv".format(cls.__name__, methodname, datetime.utcnow().strftime(DATE_FMT)))
+    click.echo("Saving to file %s" % fname)
+    click.echo("=============================")
     db = zerodb.DB(SOCKET, username=username, password=password)
     bench = cls(db, **kw)
     method = getattr(bench, methodname)
@@ -41,8 +43,13 @@ def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out
     return out
 
 
-if __name__ == "__main__":
-    classname = sys.argv[1] if len(sys.argv) > 1 else "TextBenchmark"
-    methodname = sys.argv[2] if len(sys.argv) > 2 else "read_one"
+@click.command()
+@click.option("--test-name", nargs=2, type=click.Tuple([unicode, unicode]), default=("TextBenchmark", "read_one"))
+def run(test_name):
+    classname, methodname = test_name
     cls = getattr(benchmarks, classname)
+    click.echo("Running benchmark for %s.%s" % (classname, methodname))
     run_benchmark(cls, methodname)
+
+if __name__ == "__main__":
+    run()
