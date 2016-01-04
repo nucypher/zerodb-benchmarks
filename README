@@ -1,8 +1,27 @@
 ZeroDB benchmarks
 ========================
+Installation:
+---------------------------
+Initialization:
+> ./virtualenv.sh
+> source activate
+> cd zerodb-benchmarks
+
+Start ZeroDB server:
+> zerodb-server
+
+In a separate terminal create the test data (number of records = batch_size * num_batches):
+> cd zerodb-benchmarks
+> ./create.py --batch-size <...> --num_batches <...> --use-multiprocessing
+
+Run the benchmark (can do cProfile profiling using --with-profiling option):
+> ./run.py
+
+Each script has other options (see --help)
 
 Benchmarks to do:
-  Types:
+---------------------------
+Types:
     * Fulltext search:
       - full keywords (1, <= k)
       - prefixes (1, mixed with <= k keywords)

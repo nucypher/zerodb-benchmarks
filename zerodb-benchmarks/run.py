@@ -65,11 +65,11 @@ def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out
 
 
 @click.command()
-@click.option("--test-name", nargs=2, type=click.Tuple([unicode, unicode]), default=("TextBenchmark", "read_one"))
-@click.option("--with-profiling", is_flag=True)
-@click.option("--n-cycles", type=click.INT, default=1000)
-@click.option("--n-subcycles", type=click.INT, default=5)
-@click.option("--output-dir", type=click.STRING, default="out")
+@click.option("--test-name", nargs=2, type=click.Tuple([unicode, unicode]), default=("TextBenchmark", "read_one"), help="Which test to run", show_default=True)
+@click.option("--with-profiling", is_flag=True, help="Profiling with bprofile (cProfile + call graph in png)")
+@click.option("--n-cycles", type=click.INT, default=1000, help="Number of external cycles (= how many times we save stats)", show_default=True)
+@click.option("--n-subcycles", type=click.INT, default=5, help="Number of internal cycles (stats are saved after an internal loop is complete)", show_default=True)
+@click.option("--output-dir", type=click.STRING, default="out", show_default=True)
 def run(test_name, with_profiling, n_cycles, n_subcycles, output_dir):
     classname, methodname = test_name
     cls = getattr(benchmarks, classname)

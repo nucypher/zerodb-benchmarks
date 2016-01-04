@@ -18,14 +18,14 @@ def generate_text(size):
 
 
 @click.command()
-@click.option("--batch-size", default=20000, type=click.INT)
-@click.option("--num-batches", default=5, type=click.INT)
-@click.option("--text-size", default=1000, type=click.INT)
-@click.option("--min-int", default=0, type=click.INT)
-@click.option("--max-int", default=1000000, type=click.INT)
-@click.option("--min-float", default=0, type=click.FLOAT)
-@click.option("--max-float", default=1000000, type=click.FLOAT)
-@click.option("--use-multiprocessing", is_flag=True)
+@click.option("--batch-size", default=20000, type=click.INT, help="Number of records to add in one transaction", show_default=True)
+@click.option("--num-batches", default=5, type=click.INT, help="Number of transactions for initial data creation", show_default=True)
+@click.option("--text-size", default=1000, type=click.INT, help="Size of the generated text blob (text search benchmark)", show_default=True)
+@click.option("--min-int", default=0, type=click.INT, help="Minimal integer value (for range queries)", show_default=True)
+@click.option("--max-int", default=1000000, type=click.INT, help="Maximum integer value (for range queries)", show_default=True)
+@click.option("--min-float", default=0, type=click.FLOAT, help="Minimal float value (for range queries)", show_default=True)
+@click.option("--max-float", default=1000000, type=click.FLOAT, help="Maximum float value (for range queries)", show_default=True)
+@click.option("--use-multiprocessing", is_flag=True, help="Use multiprocessing for random text generation (Markov chains)")
 def run(batch_size, num_batches, text_size, min_int, max_int, min_float, max_float, use_multiprocessing):
     global textgen
     global pool
