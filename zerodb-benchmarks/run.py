@@ -2,9 +2,9 @@
 
 import bprofile
 import click
+import csv
 import time
 import sys
-import pandas
 import pstats
 import zerodb
 
@@ -17,6 +17,7 @@ SOCKET = ("localhost", 8001)
 username = "test"
 password = "testpassword"
 DATE_FMT = "%Y-%m-%d-%H-%M"
+PROGRESS_FMT = "[{percent:.2%}] query time: {query_t:.4f}, cache filled: {size:.2f} MB, {n_queries} queries"
 
 
 def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out", with_profiling=False, **kw):
@@ -37,28 +38,30 @@ def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out
     db = zerodb.DB(SOCKET, username=username, password=password)
     bench = cls(db, **kw)
     method = getattr(bench, methodname)
-    out = []
-    for i in range(n_cycles):
-        if with_profiling:
-            profiler.start()
-        t0 = time.time()
-        for j in range(n_subcycles):
-            method()
-        dt = time.time() - t0
-        if with_profiling:
-            profiler.stop()
-            pstats.Stats(profiler.profiler).dump_stats(stats_name)
-        d_out = {
-            "size": db._connection._cache.total_estimated_size,
-            "ngc": db._connection._cache.cache_non_ghost_count,
-            "query_t": float(dt) / n_subcycles,
-            "n_queries": (i + 1) * n_subcycles}
-        print i, d_out
-        out.append(d_out)
-        df = pandas.DataFrame(out)
-        df.to_csv(fname)
+
+    with open(fname, "wb") as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["n_queries", "size", "ngc", "query_t"])
+
+        for i in range(n_cycles):
+            if with_profiling:
+                profiler.start()
+            t0 = time.time()
+            for j in range(n_subcycles):
+                method()
+            dt = time.time() - t0
+            if with_profiling:
+                profiler.stop()
+                pstats.Stats(profiler.profiler).dump_stats(stats_name)
+            size = db._connection._cache.total_estimated_size
+            ngc = db._connection._cache.cache_non_ghost_count
+            query_t = float(dt) / n_subcycles
+            n_queries = (i + 1) * n_subcycles
+
+            click.echo(PROGRESS_FMT.format(size=size / 1e6, query_t=query_t, n_queries=n_queries, percent=float(i) / n_cycles))
+            csv_writer.writerow(map(str, [n_queries, size, ngc, query_t]))
+
     db.disconnect()
-    return out
 
 
 @click.command()
