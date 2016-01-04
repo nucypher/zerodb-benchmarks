@@ -25,7 +25,7 @@ def generate_text(size):
 @click.option("--max-int", default=1000000, type=click.INT)
 @click.option("--min-float", default=0, type=click.FLOAT)
 @click.option("--max-float", default=1000000, type=click.FLOAT)
-@click.option("--use-multiprocessing/--no-use-multiprocessing", default=True)
+@click.option("--use-multiprocessing", is_flag=True)
 def run(batch_size, num_batches, text_size, min_int, max_int, min_float, max_float, use_multiprocessing):
     global textgen
     global pool
