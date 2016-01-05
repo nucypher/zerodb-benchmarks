@@ -28,8 +28,9 @@ def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out
     stats_name = fname_base + "pstats"
     click.echo("Saving to files:")
     click.echo("  Benchmark results: %s" % fname)
-    click.echo("  Profiling graph: %s" % png_name)
-    click.echo("  Profiling stats: %s" % stats_name)
+    if with_profiling:
+        click.echo("  Profiling graph: %s" % png_name)
+        click.echo("  Profiling stats: %s" % stats_name)
     click.echo("=============================")
 
     if with_profiling:
