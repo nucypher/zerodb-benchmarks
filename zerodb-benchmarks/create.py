@@ -5,9 +5,9 @@ import transaction
 import random
 import multiprocessing as mp
 
-from benchmarks.server import server
+from util.server import server
 from benchmarks.models import TestRecord
-from benchmarks.markov import MarkovChain
+from util.markov import MarkovChain
 
 pool = None
 textgen = None
