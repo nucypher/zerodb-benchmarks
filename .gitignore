@@ -6,6 +6,7 @@
 /.venv
 /zerodb-benchmarks/conf
 /zerodb-benchmarks/db
+/zerodb-benchmarks/multi-dbs/db-*
 /zerodb-benchmarks/out/*.csv
 /zerodb-benchmarks/out/*.png
 /zerodb-benchmarks/out/*.pstats

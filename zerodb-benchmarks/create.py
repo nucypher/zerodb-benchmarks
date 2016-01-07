@@ -26,7 +26,8 @@ def generate_text(size):
 @click.option("--min-float", default=0, type=click.FLOAT, help="Minimal float value (for range queries)", show_default=True)
 @click.option("--max-float", default=1000000, type=click.FLOAT, help="Maximum float value (for range queries)", show_default=True)
 @click.option("--use-multiprocessing", is_flag=True, help="Use multiprocessing for random text generation (Markov chains)")
-def run(batch_size, num_batches, text_size, min_int, max_int, min_float, max_float, use_multiprocessing):
+@click.option("--db-dir", type=click.STRING, default="", help="Directory for the db")
+def run(batch_size, num_batches, text_size, min_int, max_int, min_float, max_float, use_multiprocessing, db_dir):
     global textgen
     global pool
 
@@ -35,8 +36,8 @@ def run(batch_size, num_batches, text_size, min_int, max_int, min_float, max_flo
     markov_cache = []
     pool = mp.Pool(mp.cpu_count())
 
-    click.echo("Starting database...")
-    with server() as db:
+    click.echo("Starting database with %s records..." % (num_batches * batch_size))
+    with server(db_dir=db_dir) as db:
         with click.progressbar(range(num_batches * batch_size), label="Creating test records") as bar:
             for i_batch in bar:
 

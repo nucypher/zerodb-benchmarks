@@ -9,16 +9,20 @@ from time import sleep
 from zerodb.permissions import elliptic
 elliptic.register_auth()
 
-DEFAULT_CONF_PATH = path.join(path.dirname(path.dirname(__file__)), "conf", "server.zcml")
+DB_DIR = path.dirname(path.dirname(__file__))
 
 
 @contextmanager
-def server(conf_path=DEFAULT_CONF_PATH,
+def server(db_dir=None,
         sock=("localhost", 8001),
         username="test",
         passphrase="testpassword",
         start_server=True,
         debug=False):
+
+    if not db_dir:
+        db_dir = DB_DIR
+    conf_path = path.join(db_dir, "conf", "server.zcml")
 
     if start_server:
         server = Process(target=ZEOServer.run, kwargs={"args": ("-C", conf_path)})
