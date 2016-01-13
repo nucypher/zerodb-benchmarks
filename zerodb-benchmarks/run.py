@@ -42,7 +42,7 @@ def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out
 
     with open(fname, "wb") as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["n_queries", "size", "ngc", "query_t"])
+        csv_writer.writerow(["n_queries", "size", "n_obj", "query_t"])
 
         for i in range(n_cycles):
             if with_profiling:
@@ -54,13 +54,14 @@ def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out
             if with_profiling:
                 profiler.stop()
                 pstats.Stats(profiler.profiler).dump_stats(stats_name)
-            size = db._connection._cache.total_estimated_size
-            ngc = db._connection._cache.cache_non_ghost_count
+            n_add, b_add, n_evict, b_evict, _ = db._storage._cache.getStats()
+            size = b_add - b_evict
+            n_obj = n_add - n_evict
             query_t = float(dt) / n_subcycles
             n_queries = (i + 1) * n_subcycles
 
             click.echo(PROGRESS_FMT.format(size=size / 1e6, query_t=query_t, n_queries=n_queries, percent=float(i) / n_cycles))
-            csv_writer.writerow(map(str, [n_queries, size, ngc, query_t]))
+            csv_writer.writerow(map(str, [n_queries, size, n_obj, query_t]))
 
     db.disconnect()
 
