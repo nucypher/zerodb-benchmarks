@@ -9,6 +9,7 @@ import pstats
 import zerodb
 
 import benchmarks
+from benchmarks.models import TestRecord
 
 from os import path
 from datetime import datetime
@@ -21,7 +22,10 @@ PROGRESS_FMT = "[{percent:.2%}] query time: {query_t:.4f}, cache filled: {size:.
 
 
 def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out", with_profiling=False, **kw):
-    fname_base = "{0}.{1}.{2}.".format(cls.__name__, methodname, datetime.utcnow().strftime(DATE_FMT))
+    db = zerodb.DB(SOCKET, username=username, password=password)
+    length = len(db[TestRecord])
+
+    fname_base = "{0}.{1}.{2}.{3}.".format(cls.__name__, methodname, length, datetime.utcnow().strftime(DATE_FMT))
     fname_base = path.join(output_dir, fname_base)
     fname = fname_base + "csv"
     png_name = fname_base + "png"
@@ -36,7 +40,6 @@ def run_benchmark(cls, methodname, n_subcycles=5, n_cycles=1000, output_dir="out
     if with_profiling:
         profiler = bprofile.BProfile(png_name)
 
-    db = zerodb.DB(SOCKET, username=username, password=password)
     bench = cls(db, **kw)
     method = getattr(bench, methodname)
 
