@@ -3,3 +3,4 @@ zerodb-server<0.2
 PyMarkovChain==1.8
 bprofile
 path.py
+psutil
