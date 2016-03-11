@@ -7,6 +7,7 @@ import psutil
 import os
 import gc
 import multiprocessing as mp
+from datetime import datetime
 
 from zerodb.models import Model, Field
 
@@ -36,7 +37,7 @@ def run(db_dir, wiki_dir):
             total_names = len(db[PageName])
 
             for i, p in enumerate(names_to_process):
-                print(1.0 - (float(len(names_to_process) - i) / total_names))
+                print datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 1.0 - (float(len(names_to_process) - i) / total_names)
                 for doc in read_doc(p.fname):
                     db.add(WikiPage(**doc))
                 pname = p
@@ -45,10 +46,15 @@ def run(db_dir, wiki_dir):
                     transaction.commit()
                     gc.collect()
                     if process.memory_percent() > TERM_THRESHOLD:
-                        db.pack()
-                        return
+                        db._connection._cache.full_sweep()
+                        gc.collect()
+                        mem = process.memory_percent()
+                        if mem > TERM_THRESHOLD:
+                            print("Terminate process which occupied %s%% RAM" % mem)
+                            db.pack()
+                            return
 
-            print "All done"
+            print("All done")
             transaction.commit()
             db.pack()
 
