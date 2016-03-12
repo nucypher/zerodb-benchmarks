@@ -16,8 +16,8 @@ from benchmarks.models import WikiPage
 from wiki import read_doc
 
 
-COMMIT_THRESHOLD = 55.0
-TERM_THRESHOLD = 30.0
+COMMIT_THRESHOLD = 65.0
+TERM_THRESHOLD = 45.0
 
 
 class PageName(Model):
@@ -51,7 +51,6 @@ def run(db_dir, wiki_dir):
                         mem = process.memory_percent()
                         if mem > TERM_THRESHOLD:
                             print("Terminate process which occupied %s%% RAM" % mem)
-                            db.pack()
                             return
 
             print("All done")
