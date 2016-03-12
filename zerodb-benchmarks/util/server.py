@@ -40,7 +40,7 @@ def server(
         server = Process(target=ZEOServer.run, kwargs={"args": ("-C", conf_path)})
         server.start()
         sleep(0.2)  # Waiting until server starts (no big deal if it didn't yet though)
-    zdb = dbclass(sock, username=username, password=passphrase, debug=debug)
+    zdb = dbclass(sock, username=username, password=passphrase, debug=debug, cache_size=1000000, cache_size_bytes=2 * 2 ** 30, pool_size=1)
 
     yield zdb
 
